@@ -5,13 +5,31 @@ package pw.proz;
 
 public class App {
     public String getGreeting() {
-        return "Hello World!";
+        return "You lose!";
     }
 
     public static void main(String[] args) {
+
+
+
+        display my_display = new display();
+        
+        boolean lose=false;
+        while (!lose){
+            if(my_display.grp.atkr.position.x != 500)
+                my_display.grp.atkr.move();
+            else if(!my_display.grp.my_base.is_Base_down())
+                my_display.grp.atkr.atack(my_display.grp.my_base);
+            else{
+                lose=true;
+            }
+
+            my_display.grp.repaint();
+            try {Thread.sleep(10);} catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         System.out.println(new App().getGreeting());
-
-
 
     }
 }
