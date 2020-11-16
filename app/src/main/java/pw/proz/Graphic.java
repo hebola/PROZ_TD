@@ -4,10 +4,10 @@ import java.awt.*;
 import javax.swing.*;
 
 
-public class graphic extends JPanel{
+public class Graphic extends JPanel{
 
-    public attacker atkr = new attacker();
-    public base my_base = new base();
+    public Attacker atkr = new Attacker();
+    public Base my_base = new Base();
 
     public void paint(Graphics g){
         super.paint(g);
@@ -25,7 +25,7 @@ public class graphic extends JPanel{
         g2D.setColor(Color.red);
         g2D.drawRect(0,0,1280,720);
         this.atkr.draw(g);
-        this.my_base.draw_hit_points(g);
+        this.my_base.drawHitPoints(g);
     }
 
 

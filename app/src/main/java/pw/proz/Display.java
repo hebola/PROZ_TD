@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class display extends JFrame{
+public class Display extends JFrame{
 
-    graphic grp = new graphic();
+    Graphic grp = new Graphic();
 
-    public display(){
+    public Display(){
 
 
         //this.setPreferredSize(new Dimension(1280,720));

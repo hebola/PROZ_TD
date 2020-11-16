@@ -1,10 +1,10 @@
 package pw.proz;
 
-public class tower {
+public class Tower {
     private float range;
     static int num_of_towers = 0;
 
-    tower() {
+    Tower() {
         num_of_towers++;
     }
 

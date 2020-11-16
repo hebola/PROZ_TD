@@ -10,22 +10,20 @@ public class App {
 
     public static void main(String[] args) {
 
-
-
-        display my_display = new display();
+        Display myDisplay = new Display();
         
-        boolean lose=false;
-        while (!lose){
-            if(my_display.grp.atkr.position.x != 500)
-                my_display.grp.atkr.move();
-            else if(!my_display.grp.my_base.is_Base_down())
-                my_display.grp.atkr.atack(my_display.grp.my_base);
-            else{
-                lose=true;
+        boolean lose = false;
+        while (!lose) {
+            myDisplay.grp.atkr.move(myDisplay.grp.my_base);
+
+            if (!myDisplay.grp.my_base.isBaseDown())
+                myDisplay.grp.atkr.attack(myDisplay.grp.my_base);
+            else {
+                lose = true;
             }
 
-            my_display.grp.repaint();
-            try {Thread.sleep(10);} catch (InterruptedException e) {
+            myDisplay.grp.repaint();
+            try { Thread.sleep(10); } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
