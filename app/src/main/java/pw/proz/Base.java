@@ -3,10 +3,16 @@ package pw.proz;
 import java.awt.*;
 
 public class Base {
-    private final int BASE_X = 15;
-    private final int BASE_Y = 8;
-    private Point position = new Point(20 + 40 * BASE_X, 20 + 40 * BASE_Y);
-    public int hit_points = 20;
+    private int BASE_X;
+    private int BASE_Y;
+    private Point position;
+    public int hitPoints = 20;
+
+    Base(int x, int y){
+        BASE_X = x;
+        BASE_Y = y;
+        position = new Point(20 + 40 * BASE_X, 20 + 40 * BASE_Y);
+    }
 
     public Direction whereIsBase(Point pos) {
         if(position.y < pos.y)
@@ -27,10 +33,19 @@ public class Base {
 
     public void drawHitPoints(Graphics g) {
         g.setColor(Color.green);
-        g.drawArc(position.x - 15, position.y - 15, 30,30,90, - 18 * hit_points);
+        g.drawArc(position.x - 15, position.y - 15, 30,30,90, - 18 * hitPoints);
     }
 
     public boolean isBaseDown(){
-        return hit_points == 0;
+        return hitPoints == 0;
     }
+
+    public int getBASE_X(){
+        return BASE_X;
+    }
+
+    public int getBASE_Y(){
+        return BASE_Y;
+    }
+
 }

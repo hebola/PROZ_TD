@@ -1,15 +1,21 @@
 package pw.proz;
 
-public class Tower {
-    private float range;
-    static int num_of_towers = 0;
+import java.awt.*;
+
+public abstract class Tower {
+    protected float range;
+    protected float attackPower;
+
+    protected int size;
+    protected Point position;
+    static int numOfTowers = 0;
 
     Tower() {
-        num_of_towers++;
+        numOfTowers++;
     }
 
-    public static int getNum_of_towers() {
-        return num_of_towers;
+    public static int getNumOfTowers() {
+        return numOfTowers;
     }
 
     public float getRange() {
@@ -20,4 +26,11 @@ public class Tower {
         this.range = range;
     }
 
+    public abstract void draw(Graphics g);
+
+    public abstract void attack(Enemy[] enemy);
+
+    public Point getPosition() {
+        return position;
+    }
 }

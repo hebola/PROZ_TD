@@ -3,7 +3,33 @@
  */
 package pw.proz;
 
+import java.awt.*;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
+
 public class App {
+
+    private static Enemy myEnemy = new Enemy(15, 16);
+    private static Base myBase = new Base(6, 6);
+    private static TowerArmor myTower = new TowerArmor(1,55,15,5);
+    private static GameLoop gameLoop = new GameLoop();
+
+    public static GameLoop getGameLoop() {
+        return gameLoop;
+    }
+
+    public static Enemy getEnemy() {
+        return myEnemy;
+    }
+
+    public static Base getBase() {
+        return myBase;
+    }
+
+    public static Tower getTower() {
+        return myTower;
+    }
+
     public String getGreeting() {
         return "You lose!";
     }
@@ -11,22 +37,13 @@ public class App {
     public static void main(String[] args) {
 
         Display myDisplay = new Display();
-        
-        boolean lose = false;
-        while (!lose) {
-            myDisplay.grp.atkr.move(myDisplay.grp.my_base);
+        Graphics graphic = myDisplay.graphic.getGraphics();
 
-            if (!myDisplay.grp.my_base.isBaseDown())
-                myDisplay.grp.atkr.attack(myDisplay.grp.my_base);
-            else {
-                lose = true;
-            }
 
-            myDisplay.grp.repaint();
-            try { Thread.sleep(10); } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+
+        gameLoop.run(myDisplay, myEnemy, myTower, myBase);
+
+
         System.out.println(new App().getGreeting());
 
     }
