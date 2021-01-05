@@ -1,4 +1,4 @@
-package pw.proz;
+package Entity;
 
 import java.awt.*;
 

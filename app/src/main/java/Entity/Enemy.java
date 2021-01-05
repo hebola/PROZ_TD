@@ -1,11 +1,10 @@
-package pw.proz;
+package Entity;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 
 
-public class Enemy {
+public class Enemy extends Entity{
     //private final int START_X = 5;
     //private final int START_Y = 3;
 
@@ -16,9 +15,8 @@ public class Enemy {
     private float shield;
     private static int numOfEnemys = 0;
     private JPanel panel;
-    private Point position;
 
-    Enemy(int x, int y) {
+    public Enemy(int x, int y) {
         numOfEnemys++;
         position = new Point(20 + 40 * x, 20 + 40 * y);
         panel = new JPanel();

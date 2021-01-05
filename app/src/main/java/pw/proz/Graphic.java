@@ -6,7 +6,18 @@ import javax.swing.*;
 
 public class Graphic extends JPanel{
 
-    private Renderer render=new Renderer();
+    private Renderer render;
+    public final int Rows = 15;
+    public final int Columns = 26;
+
+    public Graphic(){
+        super();
+        this.setFocusable(true);
+
+        this.addMouseListener(new Mouse());
+
+        this.render = new Renderer();
+    }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -18,10 +29,10 @@ public class Graphic extends JPanel{
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.setColor(Color.darkGray);
-        for(int i=0;i<=30;i++)
-            g2D.drawLine(40+40*i,40,40+40*i,680);
-        for(int i=0;i<=16;i++)
-            g2D.drawLine(40,40+40*i,1240,40+40*i);
+        for(int i=0;i<=Columns;i++)
+            g2D.drawLine(40+40*i,40,40+40*i,40+40*Rows);
+        for(int i=0;i<=Rows;i++)
+            g2D.drawLine(40,40+40*i,40+40*Columns,40+40*i);
 
         g2D.setColor(Color.red);
         g2D.drawRect(0,0,1280-1,720-1);
@@ -29,6 +40,8 @@ public class Graphic extends JPanel{
         render.renderBase(g);
         render.renderTower(g);
         render.renderEnemy(g);
+
+        render.renderTileOverview(g);
     }
 
 

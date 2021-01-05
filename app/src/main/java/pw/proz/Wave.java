@@ -1,5 +1,7 @@
 package pw.proz;
 
+import Entity.Enemy;
+
 import java.util.ArrayList;
 import java.util.List;
 

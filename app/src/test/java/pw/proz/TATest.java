@@ -1,5 +1,7 @@
 package pw.proz;
 
+import Entity.Enemy;
+import Entity.TowerArmor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

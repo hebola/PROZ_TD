@@ -3,16 +3,22 @@
  */
 package pw.proz;
 
+import Entity.Base;
+import Entity.Enemy;
+import Entity.Tower;
+import Entity.TowerArmor;
+
 import java.awt.*;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
+
 
 public class App {
 
     private static Enemy myEnemy = new Enemy(15, 16);
     private static Base myBase = new Base(6, 6);
-    private static TowerArmor myTower = new TowerArmor(1,55,15,5);
+    private static TowerArmor myTower = new TowerArmor(1, 55, 15, 5);
     private static GameLoop gameLoop = new GameLoop();
+    private static Graphics graphic;
+    private static Display myDisplay;
 
     public static GameLoop getGameLoop() {
         return gameLoop;
@@ -30,21 +36,39 @@ public class App {
         return myTower;
     }
 
+    public static Display getMyDisplay() {
+        return myDisplay;
+    }
+
     public String getGreeting() {
         return "You lose!";
     }
 
     public static void main(String[] args) {
 
-        Display myDisplay = new Display();
-        Graphics graphic = myDisplay.graphic.getGraphics();
-
-
+        myDisplay = new Display();
+        graphic = myDisplay.graphic.getGraphics();
 
         gameLoop.run(myDisplay, myEnemy, myTower, myBase);
-
 
         System.out.println(new App().getGreeting());
 
     }
+
+    public static void handleLeftClick(int mouseX, int mouseY) {
+        System.out.println("Handling mouse click " + mouseX + " " + mouseY);
+        Rectangle board = new Rectangle(40,40,40*myDisplay.graphic.Columns,40*myDisplay.graphic.Rows);
+        Point tile=new Point(0,0);
+
+        if(board.contains(mouseX,mouseY)) {
+            tile = new Point((mouseX) / 40, (mouseY) / 40);
+
+            if (gameLoop.getCurrentTile() == tile)
+                gameLoop.setCurrentTile(new Point(0, 0));
+            else
+                gameLoop.setCurrentTile(tile);
+        }
+        System.out.println(tile);
+    }
+
 }

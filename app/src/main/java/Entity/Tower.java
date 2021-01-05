@@ -1,16 +1,15 @@
-package pw.proz;
+package Entity;
 
 import java.awt.*;
 
-public abstract class Tower {
+public abstract class Tower extends Entity{
     protected float range;
     protected float attackPower;
 
     protected int size;
-    protected Point position;
     static int numOfTowers = 0;
 
-    Tower() {
+    public Tower() {
         numOfTowers++;
     }
 
@@ -25,8 +24,6 @@ public abstract class Tower {
     public void setRange(float range) {
         this.range = range;
     }
-
-    public abstract void draw(Graphics g);
 
     public abstract void attack(Enemy[] enemy);
 

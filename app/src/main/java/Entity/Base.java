@@ -1,14 +1,15 @@
-package pw.proz;
+package Entity;
+
+import pw.proz.Direction;
 
 import java.awt.*;
 
-public class Base {
+public class Base extends Entity{
     private int BASE_X;
     private int BASE_Y;
-    private Point position;
     public int hitPoints = 20;
 
-    Base(int x, int y){
+    public Base(int x, int y){
         BASE_X = x;
         BASE_Y = y;
         position = new Point(20 + 40 * BASE_X, 20 + 40 * BASE_Y);
@@ -48,4 +49,7 @@ public class Base {
         return BASE_Y;
     }
 
+    public void draw(Graphics g) {
+
+    }
 }
