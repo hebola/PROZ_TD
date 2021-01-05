@@ -29,4 +29,9 @@ public class TowerArmor extends Tower {
         g.drawOval((int) (position.x - range), (int) (position.y - range), (int) (range * 2), (int) (range * 2));
     }
 
+    @Override
+    public String printData() {
+        return "Armor Tower\nattack power: " + attackPower + "\nrange: " + range;
+    }
+
 }

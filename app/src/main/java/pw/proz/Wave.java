@@ -2,6 +2,7 @@ package pw.proz;
 
 import Entity.Enemy;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class Wave {
     private int numOfEnemies;
     private int numOfEnemiesAlive;
     private int spaceBetweenEnemies;
+    private Point spawnPoint=App.getSpawn().getPosition();
     private List<Enemy> enemy;
 
     public int getSpaceBetweenEnemies() {
@@ -22,7 +24,7 @@ public class Wave {
         enemy = new ArrayList<>();
 
         for (int i = 0; i < numOfEnemies; i++)
-            enemy.add(new Enemy(15, 15));
+            enemy.add(new Enemy(spawnPoint.x, spawnPoint.y));
     }
 
     public int getNumOfEnemiesAlive() {

@@ -95,4 +95,9 @@ public class Enemy extends Entity{
     public Point getPosition() {
         return position;
     }
+
+    @Override
+    public String printData() {
+        return null;
+    }
 }

@@ -52,4 +52,9 @@ public class Base extends Entity{
     public void draw(Graphics g) {
 
     }
+
+    @Override
+    public String printData() {
+        return null;
+    }
 }

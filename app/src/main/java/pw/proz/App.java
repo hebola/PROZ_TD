@@ -3,20 +3,19 @@
  */
 package pw.proz;
 
-import Entity.Base;
-import Entity.Enemy;
-import Entity.Tower;
-import Entity.TowerArmor;
+import Entity.*;
 
 import java.awt.*;
 
 
 public class App {
 
-    private static Enemy myEnemy = new Enemy(15, 16);
     private static Base myBase = new Base(6, 6);
-    private static TowerArmor myTower = new TowerArmor(1, 55, 15, 5);
-    private static GameLoop gameLoop = new GameLoop();
+    private static Spawn mySpawn = new Spawn(1, 1);
+    public static int Rows = 15;
+    public static final int Columns = 26;
+
+    private static GameLoop gameLoop;
     private static Graphics graphic;
     private static Display myDisplay;
 
@@ -24,19 +23,15 @@ public class App {
         return gameLoop;
     }
 
-    public static Enemy getEnemy() {
-        return myEnemy;
-    }
-
     public static Base getBase() {
         return myBase;
     }
 
-    public static Tower getTower() {
-        return myTower;
+    public static Spawn getSpawn() {
+        return mySpawn;
     }
 
-    public static Display getMyDisplay() {
+    public static Display getDisplay() {
         return myDisplay;
     }
 
@@ -44,12 +39,18 @@ public class App {
         return "You lose!";
     }
 
+    public App() {
+
+    }
+
     public static void main(String[] args) {
 
+        gameLoop = new GameLoop();
         myDisplay = new Display();
         graphic = myDisplay.graphic.getGraphics();
 
-        gameLoop.run(myDisplay, myEnemy, myTower, myBase);
+
+        gameLoop.run(myDisplay, myBase, mySpawn);
 
         System.out.println(new App().getGreeting());
 
@@ -57,18 +58,18 @@ public class App {
 
     public static void handleLeftClick(int mouseX, int mouseY) {
         System.out.println("Handling mouse click " + mouseX + " " + mouseY);
-        Rectangle board = new Rectangle(40,40,40*myDisplay.graphic.Columns,40*myDisplay.graphic.Rows);
-        Point tile=new Point(0,0);
+        Rectangle board = new Rectangle(40, 40, 40 * Columns, 40 * Rows);
+        Point tile = new Point(0, 0);
 
-        if(board.contains(mouseX,mouseY)) {
+        if (board.contains(mouseX, mouseY)) {
             tile = new Point((mouseX) / 40, (mouseY) / 40);
-
-            if (gameLoop.getCurrentTile() == tile)
+            System.out.println(gameLoop.getCurrentTile() + " " + tile + " " + gameLoop.getCurrentTile().equals(tile));
+            if (gameLoop.getCurrentTile().equals(tile))
                 gameLoop.setCurrentTile(new Point(0, 0));
             else
                 gameLoop.setCurrentTile(tile);
         }
-        System.out.println(tile);
+        System.out.println(gameLoop.getCurrentTile());
     }
 
 }

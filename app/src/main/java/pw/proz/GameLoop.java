@@ -1,10 +1,10 @@
 package pw.proz;
 
-import Entity.Base;
-import Entity.Enemy;
-import Entity.Tower;
+import Entity.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Math.min;
 
@@ -14,9 +14,32 @@ public class GameLoop {
     private final int TICKS_PER_SECOND = 30;
     private final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
     private final int MAX_FRAMESKIP = 5;
-    private Point currentTile = new Point(0,0);
+    private Point currentTile = new Point(0, 0);
 
     private Tile[][] tiles;
+    private List<Tower> towers;
+
+    public List<Tower> getTowers() {
+        return towers;
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    public GameLoop() {
+        tiles = new Tile[App.Rows][App.Columns];
+        for(int i=0; i<App.Rows;i++)
+            for(int j=0; j<App.Columns;j++)
+                tiles[i][j]=new Tile();
+
+        towers = new ArrayList<>();
+        towers.add(new TowerArmor(1, 50, 2, 2));
+        tiles[2][2].setContent(towers.get(0));
+        towers.add(new TowerArmor(1, 50, 2, 3));
+        tiles[2][3].setContent(towers.get(1));
+
+    }
 
     private static Wave wave = new Wave(0);
 
@@ -36,14 +59,12 @@ public class GameLoop {
         this.currentTile = currentTile;
     }
 
-    void run(Display display, Enemy enemy, Tower tower, Base base) {
+    void run(Display display, Base base, Spawn spawn) {
 
         double next_game_tick = System.currentTimeMillis();
         int loops;
         int spaceTickCounter = 0;
         int spaceCounter = 0;
-
-        tiles = new Tile[App.getMyDisplay().graphic.Columns][App.getMyDisplay().graphic.Rows];
 
         while (true) {
             loops = 0;
@@ -61,13 +82,14 @@ public class GameLoop {
                         spaceCounter++;
                         spaceTickCounter = 0;
                     }
-                    for (int i = 0; i < min(wave.getNumOfEnemies(),spaceCounter); i++)
+                    for (int i = 0; i < min(wave.getNumOfEnemies(), spaceCounter); i++)
                         wave.getEnemy()[i].move(base);
                 }
 
                 //enemy.move(base);
 
-                tower.attack(wave.getEnemy());
+                for (int i = 0; i < towers.size(); i++)
+                    towers.get(i).attack(wave.getEnemy());
 
                 next_game_tick += SKIP_TICKS;
                 loops++;
