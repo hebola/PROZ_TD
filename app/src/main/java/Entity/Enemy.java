@@ -1,68 +1,112 @@
 package Entity;
 
+import pw.proz.App;
+import pw.proz.Direction;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 
-public class Enemy extends Entity{
-    //private final int START_X = 5;
-    //private final int START_Y = 3;
+public class Enemy extends Entity {
 
     int size = 24;
-    private float movementSpeed = 2;
+    private float movementSpeed;
+    private float maxHitPoints;
     private float hitPoints;
+    private float maxArmor;
     private float armor;
+    private float maxShield;
     private float shield;
-    private static int numOfEnemys = 0;
-    private JPanel panel;
+    private Point2D.Float exactPosition;
+    private Direction direction;
 
-    public Enemy(int x, int y) {
-        numOfEnemys++;
-        position = new Point(20 + 40 * x, 20 + 40 * y);
-        panel = new JPanel();
-        hitPoints=20;
-        armor=0;
+    private float movementSpeedFactor;
+    private float poison;
+    private int effectDuration;
+    private static int numOfEnemies = 0;
 
+    public Enemy(int x, int y, float armor, float shield, float maxHitPoints) {
+        numOfEnemies++;
+        positionPixel = new Point(x, y);
+        positionTile = pixelToTile();
+        exactPosition = new Point2D.Float(positionPixel.x, positionPixel.y);
+        movementSpeed = 2;
+        this.maxHitPoints = maxHitPoints;
+        hitPoints = maxHitPoints;
+        this.maxShield = shield;
+        this.maxArmor = armor;
+        this.armor = armor;
+        this.shield = shield;
+        movementSpeedFactor = 1;
+        poison = 0;
+        effectDuration = 0;
+        direction = Direction.N;
     }
 
-    public static int getNumOfEnemys() {
-        return numOfEnemys;
+    public static int getNumOfEnemies() {
+        return numOfEnemies;
     }
 
     public void move(Base toWhichBase) {
-        if(!dead())
-        if (toWhichBase.distanceToBase(position) > 1600)
-            switch (toWhichBase.whereIsBase(position)) {
-                case N -> position.y -= movementSpeed;
-                case S -> position.y += movementSpeed;
-                case E -> position.x += movementSpeed;
-                case W -> position.x -= movementSpeed;
+        int[][] route = App.getRoute();
+        if ((direction == Direction.E && Math.abs((exactPosition.x + 20) % 40 - (exactPosition.x + movementSpeed * movementSpeedFactor + 20) % 40) > 20) ||
+                (direction == Direction.W && Math.abs((exactPosition.x + 20) % 40 - (exactPosition.x - movementSpeed * movementSpeedFactor + 20) % 40) > 20) ||
+                (direction == Direction.N && Math.abs((exactPosition.y + 20) % 40 - (exactPosition.y - movementSpeed * movementSpeedFactor + 20) % 40) > 20) ||
+                (direction == Direction.S && Math.abs((exactPosition.y + 20) % 40 - (exactPosition.y + movementSpeed * movementSpeedFactor + 20) % 40) > 20)) {
+
+            positionTile = pixelToTile();
+            int min = App.min(route[positionTile.x + 1][positionTile.y], App.min(route[positionTile.x - 1][positionTile.y], App.min(route[positionTile.x][positionTile.y + 1], route[positionTile.x][positionTile.y - 1])));
+
+            if (route[positionTile.x + 1][positionTile.y] == min)
+                direction = Direction.E;
+            else if (route[positionTile.x - 1][positionTile.y] == min)
+                direction = Direction.W;
+            else if (route[positionTile.x][positionTile.y + 1] == min)
+                direction = Direction.S;
+            else direction = Direction.N;
+
+        }
+        if (!dead()) {
+            if (toWhichBase.distanceToBase(positionPixel) > 1600) {
+                switch (direction) {
+                    case N -> exactPosition.y -= (movementSpeed * movementSpeedFactor);
+                    case S -> exactPosition.y += (movementSpeed * movementSpeedFactor);
+                    case E -> exactPosition.x += (movementSpeed * movementSpeedFactor);
+                    case W -> exactPosition.x -= (movementSpeed * movementSpeedFactor);
+                }
+                positionPixel.x = (int) exactPosition.x;
+                positionPixel.y = (int) exactPosition.y;
+                movementSpeedFactor = 1;
+            } else toWhichBase.getHit(1);
+
+            if (effectDuration > 0) {
+                effectDuration--;
+                hitPoints -= poison;
             }
+        }
     }
 
     public void draw(Graphics g) {
-            g.setColor(Color.red);
-            g.drawOval(position.x - size / 2, position.y - size / 2, size, size);
+        if (!dead()) {
+            g.setColor(Color.pink);
+            g.fillOval(positionPixel.x - size / 2, positionPixel.y - size / 2, size, size);
 
             g.setColor(Color.green);
-            g.drawArc(position.x - 10, position.y - 10, 20, 20, 90, (int) (-18 * hitPoints));
+            g.fillRect(positionPixel.x - size / 2, positionPixel.y + 4, (int) (size * Math.max(hitPoints, 0) / maxHitPoints), 2);
+            g.setColor(Color.red);
+            g.fillRect(positionPixel.x - size / 2, positionPixel.y + 7, (int) (size * Math.max(armor, 0) / maxArmor), 2);
+            g.setColor(Color.blue);
+            g.fillRect(positionPixel.x - size / 2, positionPixel.y + 10, (int) (size * Math.max(shield, 0) / maxShield), 2);
 
-    }
-
-
-    public void attack(Base my_base) {
-        if (my_base.distanceToBase(position) == 1600) {
-            my_base.hitPoints--;
         }
     }
+
 
     public float getArmor() {
         return armor;
     }
 
-    public float getMovementSpeed() {
-        return movementSpeed;
-    }
 
     public float getHitPoints() {
         return hitPoints;
@@ -70,10 +114,6 @@ public class Enemy extends Entity{
 
     public float getShield() {
         return shield;
-    }
-
-    public void setMovementSpeed(float movementSpeed) {
-        this.movementSpeed = movementSpeed;
     }
 
     public void setHitPoints(float hitPoints) {
@@ -92,8 +132,16 @@ public class Enemy extends Entity{
         return hitPoints <= 0;
     }
 
-    public Point getPosition() {
-        return position;
+    public void setMovementSpeedFactor(float movementSpeedFactor) {
+        this.movementSpeedFactor = movementSpeedFactor;
+    }
+
+    public void setPoison(float poison) {
+        this.poison = poison;
+    }
+
+    public void setEffectDuration(int effectDuration) {
+        this.effectDuration = effectDuration;
     }
 
     @Override

@@ -4,16 +4,17 @@
 package pw.proz;
 
 import Entity.*;
+import GUI.*;
 
 import java.awt.*;
 
-
 public class App {
 
-    private static Base myBase = new Base(6, 6);
+    private static Base myBase = new Base(26, 15);
     private static Spawn mySpawn = new Spawn(1, 1);
     public static int Rows = 15;
     public static final int Columns = 26;
+    private static int[][] route;
 
     private static GameLoop gameLoop;
     private static Graphics graphic;
@@ -45,9 +46,22 @@ public class App {
 
     public static void main(String[] args) {
 
+        route = new int[Columns + 2][Rows + 2];
+        for (int i = 1; i < Columns + 1; i++)
+            for (int j = 1; j < Rows + 1; j++)
+                route[i][j] = 888;
+        for (int i = 0; i < Columns + 1; i++) {
+            route[i][0] = 999;
+            route[i][Rows + 1] = 999;
+        }
+        for (int j = 0; j < Rows + 1; j++) {
+            route[0][j] = 999;
+            route[Columns + 1][j] = 999;
+        }
+
         gameLoop = new GameLoop();
         myDisplay = new Display();
-        graphic = myDisplay.graphic.getGraphics();
+        graphic = myDisplay.getGraphic().getGraphics();
 
 
         gameLoop.run(myDisplay, myBase, mySpawn);
@@ -58,7 +72,11 @@ public class App {
 
     public static void handleLeftClick(int mouseX, int mouseY) {
         System.out.println("Handling mouse click " + mouseX + " " + mouseY);
+        Point corner = new Point(40 + 40 * Columns + 10, 40);
         Rectangle board = new Rectangle(40, 40, 40 * Columns, 40 * Rows);
+        Rectangle actionBox = new Rectangle(corner.x, corner.y + 120, 180, 30);
+        Rectangle buyingBox = new Rectangle(corner.x, corner.y + 150, 90, 120);
+        Rectangle nextWaveBox = new Rectangle(corner.x, corner.y + 300, 180, 30);
         Point tile = new Point(0, 0);
 
         if (board.contains(mouseX, mouseY)) {
@@ -68,8 +86,102 @@ public class App {
                 gameLoop.setCurrentTile(new Point(0, 0));
             else
                 gameLoop.setCurrentTile(tile);
+
+        } else if (!gameLoop.getCurrentTile().equals(new Point(0, 0))) {
+            tile = gameLoop.getCurrentTile();
+            if (actionBox.contains(mouseX, mouseY)) {
+                if (gameLoop.getTiles()[tile.x][tile.y].getContent() != null)
+                    if (!gameLoop.getTiles()[tile.x][tile.y].getContent().getClass().getTypeName().equals("Entity.Base") &&
+                            !gameLoop.getTiles()[tile.x][tile.y].getContent().getClass().getTypeName().equals("Entity.Spawn"))
+                        if (mouseX < corner.x + 90) /* upgrade tower */ {
+                            Tower tower;
+                            tower = (Tower) gameLoop.getTiles()[tile.x][tile.y].getContent();
+                            tower.upgrade();
+                        } else {
+                            gameLoop.getTowers().remove(gameLoop.getTiles()[tile.x][tile.y].getContent());
+                            gameLoop.getTiles()[tile.x][tile.y].setContent(null);
+                        }
+            } else if (buyingBox.contains(mouseX, mouseY)) {
+                if (gameLoop.getTiles()[tile.x][tile.y].getContent() == null) {
+                    try {
+                        if (mouseY < corner.y + 150 + 30)
+                            gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerArmor(1, 50, tile.x, tile.y));
+                        else if (mouseY < corner.y + 150 + 60)
+                            gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerShield(1, 50, tile.x, tile.y));
+                        else if (mouseY < corner.y + 150 + 90)
+                            gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerPoison(1, 50, tile.x, tile.y));
+                        else gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerSlowdown(1, 50, tile.x, tile.y));
+
+                        gameLoop.getTowers().add((Tower) gameLoop.getTiles()[tile.x][tile.y].getContent());
+
+                        recalculateRoute(myBase.getPositionTile());
+                    } catch (Exception e) {
+                        gameLoop.getTowers().remove(gameLoop.getTiles()[tile.x][tile.y].getContent());
+                        gameLoop.getTiles()[tile.x][tile.y].setContent(null);
+                    }
+                }
+            } else if (nextWaveBox.contains(mouseX, mouseY)) ;
+            else gameLoop.setCurrentTile(new Point(0, 0));
         }
-        System.out.println(gameLoop.getCurrentTile());
+
+        if (nextWaveBox.contains(mouseX, mouseY)) {
+            gameLoop.nextWave();
+            System.out.println("next Wave");
+        }
+
+        //print routs
+        /* for (int j = 1; j < Rows + 1; j++) {
+            System.out.println();
+            for (int i = 1; i < Columns + 1; i++)
+                System.out.print(route[i][j] + "\t");
+        }*/
     }
+
+    public static void recalculateRoute(Point toTile) throws Exception {
+        Tile[][] tiles = gameLoop.getTiles();
+
+        for (int i = 1; i < Columns + 1; i++)
+            for (int j = 1; j < Rows + 1; j++)
+                route[i][j] = 888;
+        for (int i = 0; i < Columns + 1; i++) {
+            route[i][0] = 999;
+            route[i][Rows + 1] = 999;
+        }
+        for (int j = 0; j < Rows + 1; j++) {
+            route[0][j] = 999;
+            route[Columns + 1][j] = 999;
+        }
+
+
+        for (int i = 0; i < gameLoop.getTowers().size(); i++)
+            route[gameLoop.getTowers().get(i).getPositionTile().x][gameLoop.getTowers().get(i).getPositionTile().y] = 999;
+
+        route[toTile.x][toTile.y] = 0;
+        boolean change = false;
+        int loopCounter = Columns * Rows;
+        do {
+            change = false;
+            for (int i = 1; i < Columns + 1; i++)
+                for (int j = 1; j < Rows + 1; j++)
+                    if (route[i][j] == 888) {
+                        route[i][j] = min(min(route[i][j], min(route[i + 1][j], min(route[i][j + 1], min(route[i - 1][j], route[i][j - 1])))) + 1, 888);
+                        change = true;
+                    }
+            loopCounter--;
+            if (loopCounter == 0)
+                throw new Exception("can't find route");
+        } while (change);
+    }
+
+    public static int min(int a, int b) {
+        if (a > b)
+            return b;
+        else return a;
+    }
+
+    public static int[][] getRoute() {
+        return route;
+    }
+
 
 }

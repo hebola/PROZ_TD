@@ -1,4 +1,7 @@
-package pw.proz;
+package GUI;
+
+import pw.proz.App;
+import pw.proz.Mouse;
 
 import java.awt.*;
 import javax.swing.*;
@@ -28,7 +31,7 @@ public class Graphic extends JPanel{
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.setColor(Color.darkGray);
-        for(int i=0;i<=App.Columns;i++)
+        for(int i = 0; i<= App.Columns; i++)
             g2D.drawLine(40+40*i,40,40+40*i,40+40*App.Rows);
         for(int i=0;i<=App.Rows;i++)
             g2D.drawLine(40,40+40*i,40+40*App.Columns,40+40*i);
@@ -39,6 +42,7 @@ public class Graphic extends JPanel{
         render.renderBase(g);
         render.renderTower(g);
         render.renderEnemy(g);
+        render.renderSpawn(g);
 
         render.renderTileOverview(g);
     }

@@ -14,7 +14,7 @@ public class TATest {
         TowerArmor towerArmor=new TowerArmor(1,55,1,2);
 
         for (int i = 0; i < 5; i++)
-            enemy[i]=new Enemy(1,1);
+            enemy[i]=new Enemy(1,1,10,10,50);
 
         towerArmor.attack(enemy);
 

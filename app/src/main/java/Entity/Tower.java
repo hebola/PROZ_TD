@@ -3,8 +3,11 @@ package Entity;
 import java.awt.*;
 
 public abstract class Tower extends Entity{
+    protected float rangeFactor=1;
+    protected float attackPowerFactor=1;
     protected float range;
     protected float attackPower;
+    protected int level;
 
     protected int size;
     static int numOfTowers = 0;
@@ -27,7 +30,17 @@ public abstract class Tower extends Entity{
 
     public abstract void attack(Enemy[] enemy);
 
-    public Point getPosition() {
-        return position;
+    public void setAttackPower(float attackPower) {
+        this.attackPower = attackPower;
     }
+
+    public float getAttackPower() {
+        return attackPower;
+    }
+
+    public void drawRange(Graphics g){
+        g.drawOval((int) (positionPixel.x - range*rangeFactor), (int) (positionPixel.y - range*rangeFactor), (int) (range*rangeFactor * 2), (int) (range*rangeFactor * 2));
+    }
+
+    public abstract void upgrade();
 }

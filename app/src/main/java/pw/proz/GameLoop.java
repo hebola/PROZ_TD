@@ -1,6 +1,7 @@
 package pw.proz;
 
 import Entity.*;
+import GUI.Display;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -28,16 +29,16 @@ public class GameLoop {
     }
 
     public GameLoop() {
-        tiles = new Tile[App.Rows][App.Columns];
-        for(int i=0; i<App.Rows;i++)
-            for(int j=0; j<App.Columns;j++)
-                tiles[i][j]=new Tile();
+        tiles = new Tile[App.Columns + 1][App.Rows + 1];
+        for (int i = 0; i < App.Rows + 1; i++)
+            for (int j = 0; j < App.Columns + 1; j++)
+                tiles[j][i] = new Tile();
 
         towers = new ArrayList<>();
-        towers.add(new TowerArmor(1, 50, 2, 2));
+        /*towers.add(new TowerArmor(1, 50, 2, 2));
         tiles[2][2].setContent(towers.get(0));
         towers.add(new TowerArmor(1, 50, 2, 3));
-        tiles[2][3].setContent(towers.get(1));
+        tiles[2][3].setContent(towers.get(1));*/
 
     }
 
@@ -63,30 +64,29 @@ public class GameLoop {
 
         double next_game_tick = System.currentTimeMillis();
         int loops;
-        int spaceTickCounter = 0;
-        int spaceCounter = 0;
+
+        tiles[base.getPositionTile().x][base.getPositionTile().y].setContent(base);
+        tiles[spawn.getPositionTile().x][spawn.getPositionTile().y].setContent(spawn);
+        try {
+            App.recalculateRoute(App.getBase().getPositionTile());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         while (true) {
             loops = 0;
 
             while (System.currentTimeMillis() > next_game_tick && loops < MAX_FRAMESKIP) {
 
-                if (wave.getNumOfEnemiesAlive() <= 0) {
-                    wave = new Wave(5);
-                    spaceTickCounter = 0;
-                    spaceCounter = 0;
-                } else {
-                    if (spaceTickCounter < wave.getSpaceBetweenEnemies())
-                        spaceTickCounter++;
-                    else {
-                        spaceCounter++;
-                        spaceTickCounter = 0;
-                    }
-                    for (int i = 0; i < min(wave.getNumOfEnemies(), spaceCounter); i++)
-                        wave.getEnemy()[i].move(base);
+                if (wave.getSpaceTickCounter() < wave.getSpaceBetweenEnemies())
+                    wave.setSpaceTickCounter(wave.getSpaceTickCounter() + 1);
+                else {
+                    wave.setSpaceCounter(wave.getSpaceCounter() + 1);
+                    wave.setSpaceTickCounter(0);
                 }
+                for (int i = 0; i < min(wave.getNumOfEnemies(), wave.getSpaceCounter()); i++)
+                    wave.getEnemy()[i].move(base);
 
-                //enemy.move(base);
 
                 for (int i = 0; i < towers.size(); i++)
                     towers.get(i).attack(wave.getEnemy());
@@ -102,4 +102,14 @@ public class GameLoop {
         }
     }
 
+    public void nextWave() {
+        if (wave.getNumOfEnemiesAlive() == 0) {
+            wave.numberOfWaves++;
+            wave = new Wave((int) (wave.numberOfWaves * 1.5));
+            wave.setSpaceTickCounter(0);
+            wave.setSpaceCounter(0);
+            System.out.println("created wave");
+        }
+        System.out.println("end wave");
+    }
 }

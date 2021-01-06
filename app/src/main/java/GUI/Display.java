@@ -1,4 +1,4 @@
-package pw.proz;
+package GUI;
 
 import java.awt.*;
 import javax.swing.*;
@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class Display extends JFrame{
 
-    Graphic graphic = new Graphic();
+    private Graphic graphic = new Graphic();
 
     public Display(){
 
@@ -23,4 +23,7 @@ public class Display extends JFrame{
 
     }
 
+    public Graphic getGraphic() {
+        return graphic;
+    }
 }
