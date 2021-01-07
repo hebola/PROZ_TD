@@ -16,6 +16,7 @@ public class GameLoop {
     private final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
     private final int MAX_FRAMESKIP = 5;
     private Point currentTile = new Point(0, 0);
+    private static boolean loseCondition;
 
     private Tile[][] tiles;
     private List<Tower> towers;
@@ -26,6 +27,14 @@ public class GameLoop {
 
     public Tile[][] getTiles() {
         return tiles;
+    }
+
+    public static void setLoseCondition(boolean lose) {
+        loseCondition = lose;
+    }
+
+    public static boolean getLoseCondition() {
+        return loseCondition;
     }
 
     public GameLoop() {
@@ -64,6 +73,7 @@ public class GameLoop {
 
         double next_game_tick = System.currentTimeMillis();
         int loops;
+        loseCondition = false;
 
         tiles[base.getPositionTile().x][base.getPositionTile().y].setContent(base);
         tiles[spawn.getPositionTile().x][spawn.getPositionTile().y].setContent(spawn);
@@ -73,7 +83,7 @@ public class GameLoop {
             e.printStackTrace();
         }
 
-        while (true) {
+        while (!loseCondition) {
             loops = 0;
 
             while (System.currentTimeMillis() > next_game_tick && loops < MAX_FRAMESKIP) {
@@ -99,11 +109,15 @@ public class GameLoop {
             //System.out.println(interpolation);
             display.repaint();
             //display.graphic.repaint();
+            if (base.isBaseDown())
+                loseCondition = true;
         }
+
     }
 
     public void nextWave() {
         if (wave.getNumOfEnemiesAlive() == 0) {
+            App.getMyGold().addGold(100 * wave.numberOfWaves);
             wave.numberOfWaves++;
             wave = new Wave((int) (wave.numberOfWaves * 1.5));
             wave.setSpaceTickCounter(0);

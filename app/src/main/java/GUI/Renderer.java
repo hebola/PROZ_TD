@@ -4,9 +4,9 @@ import Entity.*;
 import pw.proz.App;
 import pw.proz.GameLoop;
 import pw.proz.Tile;
+import pw.proz.Wave;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Renderer {
@@ -66,6 +66,7 @@ public class Renderer {
         }
 
         g.drawRect(corner.x, corner.y + 300, 180, 30);
+        g.drawString("next wave", corner.x + 64, corner.y + 300 + 20);
 
 
         g.setColor(Color.gray);
@@ -74,13 +75,30 @@ public class Renderer {
         g.drawString("X: " + currentTile.x, corner.x + 5, corner.y + g.getFont().getSize() + 2);
         g.drawString("Y: " + currentTile.y, corner.x + 40, corner.y + g.getFont().getSize() + 2);
 
-        int y = corner.y + g.getFont().getSize() * 2 + 2;
+        int y = corner.y + g.getFont().getSize() * 2 - 4;
         if (tiles[currentTile.x][currentTile.y].getContent() != null)
             for (String line : tiles[currentTile.x][currentTile.y].getContent().printData().split("\n"))
                 g.drawString(line, corner.x + 5, y += g.getFontMetrics().getHeight());
+
+        g.drawString("wave: " + gameLoop.getWave().getNumberOfWaves(), corner.x + 5, corner.y + 320 + 30);
+        g.drawString("gold: " + App.getMyGold().getAmount(), corner.x + 5, corner.y + 320 + 50);
     }
 
     public void renderSpawn(Graphics g) {
         spawn.draw(g);
+    }
+
+    public void renderGameOverScreen(Graphics g) {
+        g.setColor(Color.darkGray);
+        g.fillRect(100, 100, 920, 480);
+
+        g.setColor(Color.black);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 120));
+        g.drawString("GAME OVER", 170, 350);
+
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+        g.drawString("you survived " + (Wave.getNumberOfWaves() - 1) + " waves!", 170, 390);
+
+
     }
 }

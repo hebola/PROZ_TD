@@ -3,6 +3,7 @@ package Entity;
 import java.awt.*;
 
 public class TowerPoison extends Tower {
+
     private int duration = 10;
 
     public TowerPoison(float attackPower, int range, int x, int y) {
@@ -11,6 +12,7 @@ public class TowerPoison extends Tower {
         positionTile = new Point(x, y);
         positionPixel = new Point(20 + 40 * x, 20 + 40 * y);
         rangeFactor = (float) 0.7;
+        upgradeCost=100;
     }
 
     public void attack(Enemy[] enemy) {
@@ -29,7 +31,7 @@ public class TowerPoison extends Tower {
 
     @Override
     public String printData() {
-        return "Poison Tower\nlvl: " + level + "\npower: " + attackPower * attackPowerFactor + "\nrange: " + range * rangeFactor + "\nduration: " + duration;
+        return "Poison Tower\nlvl: " + level + "\nupgrade cost: " + level * upgradeCost + "\npower: " + attackPower * attackPowerFactor + "\nrange: " + range * rangeFactor + "\nduration: " + duration;
     }
 
     @Override

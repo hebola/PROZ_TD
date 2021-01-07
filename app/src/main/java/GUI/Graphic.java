@@ -1,6 +1,7 @@
 package GUI;
 
 import pw.proz.App;
+import pw.proz.GameLoop;
 import pw.proz.Mouse;
 
 import java.awt.*;
@@ -43,8 +44,10 @@ public class Graphic extends JPanel{
         render.renderTower(g);
         render.renderEnemy(g);
         render.renderSpawn(g);
-
         render.renderTileOverview(g);
+        if(GameLoop.getLoseCondition())
+            render.renderGameOverScreen(g);
+
     }
 
 

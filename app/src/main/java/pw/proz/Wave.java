@@ -77,4 +77,8 @@ public class Wave {
     public void setSpaceCounter(int spaceCounter) {
         this.spaceCounter = spaceCounter;
     }
+
+    public static int getNumberOfWaves() {
+        return numberOfWaves;
+    }
 }

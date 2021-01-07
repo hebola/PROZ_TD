@@ -12,6 +12,7 @@ public class App {
 
     private static Base myBase = new Base(26, 15);
     private static Spawn mySpawn = new Spawn(1, 1);
+    private static Gold myGold = new Gold(200);
     public static int Rows = 15;
     public static final int Columns = 26;
     private static int[][] route;
@@ -32,12 +33,8 @@ public class App {
         return mySpawn;
     }
 
-    public static Display getDisplay() {
-        return myDisplay;
-    }
-
-    public String getGreeting() {
-        return "You lose!";
+    public static Gold getMyGold() {
+        return myGold;
     }
 
     public App() {
@@ -65,8 +62,6 @@ public class App {
 
 
         gameLoop.run(myDisplay, myBase, mySpawn);
-
-        System.out.println(new App().getGreeting());
 
     }
 
@@ -96,21 +91,30 @@ public class App {
                         if (mouseX < corner.x + 90) /* upgrade tower */ {
                             Tower tower;
                             tower = (Tower) gameLoop.getTiles()[tile.x][tile.y].getContent();
-                            tower.upgrade();
+                            if (App.getMyGold().subtractGold(tower.getUpgradeCost() * tower.getLevel()))
+                                tower.upgrade();
                         } else {
+                            Tower tower = (Tower) gameLoop.getTiles()[tile.x][tile.y].getContent();
+                            App.getMyGold().addGold(((tower.getLevel() - 1) * tower.getUpgradeCost()) / 2 + tower.cost);
                             gameLoop.getTowers().remove(gameLoop.getTiles()[tile.x][tile.y].getContent());
                             gameLoop.getTiles()[tile.x][tile.y].setContent(null);
                         }
             } else if (buyingBox.contains(mouseX, mouseY)) {
                 if (gameLoop.getTiles()[tile.x][tile.y].getContent() == null) {
                     try {
-                        if (mouseY < corner.y + 150 + 30)
-                            gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerArmor(1, 50, tile.x, tile.y));
-                        else if (mouseY < corner.y + 150 + 60)
-                            gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerShield(1, 50, tile.x, tile.y));
-                        else if (mouseY < corner.y + 150 + 90)
-                            gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerPoison(1, 50, tile.x, tile.y));
-                        else gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerSlowdown(1, 50, tile.x, tile.y));
+                        if (mouseY < corner.y + 150 + 30) {
+                            if (App.getMyGold().subtractGold(TowerArmor.cost))
+                                gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerArmor(1, 50, tile.x, tile.y));
+                        } else if (mouseY < corner.y + 150 + 60) {
+                            if (App.getMyGold().subtractGold(TowerShield.cost))
+                                gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerShield(1, 50, tile.x, tile.y));
+                        } else if (mouseY < corner.y + 150 + 90) {
+                            if (App.getMyGold().subtractGold(TowerPoison.cost))
+                                gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerPoison(1, 50, tile.x, tile.y));
+                        } else {
+                            if (App.getMyGold().subtractGold(TowerSlowdown.cost))
+                                gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerSlowdown(1, 50, tile.x, tile.y));
+                        }
 
                         gameLoop.getTowers().add((Tower) gameLoop.getTiles()[tile.x][tile.y].getContent());
 

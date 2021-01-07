@@ -9,6 +9,8 @@ public class TowerShield extends Tower{
         this.range = range;
         positionTile=new Point(x,y);
         positionPixel = new Point(20 + 40 * x, 20 + 40 * y);
+
+        upgradeCost=50;
     }
 
     public void attack(Enemy[] enemy) {
@@ -37,7 +39,7 @@ public class TowerShield extends Tower{
 
     @Override
     public String printData() {
-        return "Shield Tower\nlvl: " + level + "\nattack power: " + attackPower*attackPowerFactor + "\nrange: " + range*rangeFactor;
+        return "Shield Tower\nlvl: " + level + "\nupgrade cost: " + level * upgradeCost + "\nattack power: " + attackPower*attackPowerFactor + "\nrange: " + range*rangeFactor;
     }
 
 }
