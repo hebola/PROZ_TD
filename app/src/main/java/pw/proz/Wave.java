@@ -31,13 +31,13 @@ public class Wave {
 
         for (int i = 0; i < numOfEnemies; i++)
             switch (numberOfWaves % 7) {
-                case 0 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10*numberOfWaves, 10, 50));
-                case 1 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 10*numberOfWaves, 50));
-                case 2 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 10, 50+10*numberOfWaves));
-                case 3 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10*numberOfWaves, 10*numberOfWaves, 50));
-                case 4 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10*numberOfWaves, 10, 50+10*numberOfWaves));
-                case 5 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 10*numberOfWaves, 50+10*numberOfWaves));
-                case 6 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10*numberOfWaves, 10*numberOfWaves, 50+10*numberOfWaves));
+                case 0 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 20*numberOfWaves, 10, 50));
+                case 1 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 20*numberOfWaves, 50));
+                case 2 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 10, 50+20*numberOfWaves));
+                case 3 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 20*numberOfWaves, 20*numberOfWaves, 50));
+                case 4 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 20*numberOfWaves, 10, 50+20*numberOfWaves));
+                case 5 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 10*numberOfWaves, 50+20*numberOfWaves));
+                case 6 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 20*numberOfWaves, 20*numberOfWaves, 50+20*numberOfWaves));
             }
 
 

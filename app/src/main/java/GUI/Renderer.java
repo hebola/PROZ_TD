@@ -46,10 +46,10 @@ public class Renderer {
         if (currentTile.x != 0 || currentTile.y != 0) {
             if (tiles[currentTile.x][currentTile.y].getContent() == null) {
                 g.drawString("buy:", corner.x + 36, corner.y + 120 + 20);
-                g.drawString("Armor Tower", corner.x + 5, corner.y + 120 + 50);
-                g.drawString("Shield Tower", corner.x + 5, corner.y + 120 + 80);
+                g.drawString("AntiArmor Twr", corner.x + 5, corner.y + 120 + 50);
+                g.drawString("AntiShield Twr", corner.x + 5, corner.y + 120 + 80);
                 g.drawString("Poison Tower", corner.x + 5, corner.y + 120 + 110);
-                g.drawString("Slowing Tow.", corner.x + 5, corner.y + 120 + 140);
+                g.drawString("Slowing Twr", corner.x + 5, corner.y + 120 + 140);
                 g.drawRect(corner.x, corner.y + 120 + 30, 90, 30);
                 g.drawRect(corner.x, corner.y + 120 + 60, 90, 30);
                 g.drawRect(corner.x, corner.y + 120 + 90, 90, 30);

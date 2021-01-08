@@ -30,14 +30,14 @@ public class TowerSlowdown extends Tower {
 
     @Override
     public String printData() {
-        return "Slowdown Tower\nlvl: " + level+ "\nupgrade cost: " + level * upgradeCost  + "\nslowdown factor: " + (float) Math.pow(19. / 20, attackPower * attackPowerFactor) + "\nrange: " + range * rangeFactor;
+        return "Slowdown Tower\nlvl: " + level + "\nupgrade cost: " + level * upgradeCost + "\nslowdown factor: " + (float) Math.pow(19. / 20, attackPower * attackPowerFactor) + "\nrange: " + range * rangeFactor;
     }
 
     @Override
     public void upgrade() {
-        if(App.getMyGold().subtractGold(level*upgradeCost))
-        level++;
-        attackPowerFactor += 0.1;
+        if (App.getMyGold().subtractGold(level * upgradeCost))
+            level++;
+        attackPowerFactor += 0.5;
         rangeFactor = (float) Math.log10(level * 10);
     }
 }

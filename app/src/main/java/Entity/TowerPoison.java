@@ -11,8 +11,8 @@ public class TowerPoison extends Tower {
         this.range = range;
         positionTile = new Point(x, y);
         positionPixel = new Point(20 + 40 * x, 20 + 40 * y);
-        rangeFactor = (float) 0.7;
-        upgradeCost=100;
+        rangeFactor = (float) 1;
+        upgradeCost = 500;
     }
 
     public void attack(Enemy[] enemy) {

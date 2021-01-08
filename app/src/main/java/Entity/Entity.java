@@ -17,7 +17,7 @@ public abstract class Entity {
     }
 
     public Point pixelToTile() {
-        return new Point(positionPixel.x/40, positionPixel.y/40);
+        return new Point(positionPixel.x / 40, positionPixel.y / 40);
     }
 
     public abstract String printData();

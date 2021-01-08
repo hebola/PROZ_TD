@@ -17,7 +17,7 @@ public class Mouse implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        App.handleLeftClick(e.getX(),e.getY());
+        App.handleLeftClick(e.getX(), e.getY());
     }
 
     @Override

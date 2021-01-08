@@ -9,7 +9,7 @@ public abstract class Tower extends Entity {
     protected float attackPower;
     protected int level = 1;
     protected int upgradeCost;
-    public static int cost=100;
+    public static int cost = 100;
 
     protected int size;
     static int numOfTowers = 0;

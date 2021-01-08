@@ -26,7 +26,7 @@ public class Base extends Entity {
     }
 
     public boolean isBaseDown() {
-        return hitPoints == 0;
+        return hitPoints <= 0;
     }
 
 

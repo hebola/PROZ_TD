@@ -37,10 +37,6 @@ public class App {
         return myGold;
     }
 
-    public App() {
-
-    }
-
     public static void main(String[] args) {
 
         route = new int[Columns + 2][Rows + 2];
@@ -116,7 +112,8 @@ public class App {
                                 gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerSlowdown(1, 50, tile.x, tile.y));
                         }
 
-                        gameLoop.getTowers().add((Tower) gameLoop.getTiles()[tile.x][tile.y].getContent());
+                        if (gameLoop.getTiles()[tile.x][tile.y].getContent() != null)
+                            gameLoop.getTowers().add((Tower) gameLoop.getTiles()[tile.x][tile.y].getContent());
 
                         recalculateRoute(myBase.getPositionTile());
                     } catch (Exception e) {
@@ -130,7 +127,7 @@ public class App {
 
         if (nextWaveBox.contains(mouseX, mouseY)) {
             gameLoop.nextWave();
-            System.out.println("next Wave");
+            //System.out.println("next Wave");
         }
 
         //print routs

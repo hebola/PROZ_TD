@@ -117,7 +117,7 @@ public class GameLoop {
 
     public void nextWave() {
         if (wave.getNumOfEnemiesAlive() == 0) {
-            App.getMyGold().addGold(100 * wave.numberOfWaves);
+            App.getMyGold().addGold(100 + 30 * wave.numberOfWaves);
             wave.numberOfWaves++;
             wave = new Wave((int) (wave.numberOfWaves * 1.5));
             wave.setSpaceTickCounter(0);

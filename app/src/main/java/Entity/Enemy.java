@@ -31,7 +31,7 @@ public class Enemy extends Entity {
         positionPixel = new Point(x, y);
         positionTile = pixelToTile();
         exactPosition = new Point2D.Float(positionPixel.x, positionPixel.y);
-        movementSpeed = 2;
+        movementSpeed = 4;
         this.maxHitPoints = maxHitPoints;
         hitPoints = maxHitPoints;
         this.maxShield = shield;

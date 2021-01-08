@@ -2,10 +2,11 @@ package Entity;
 
 import java.awt.*;
 
-public class Spawn extends Entity{
+public class Spawn extends Entity {
 
     int size = 30;
-    public Spawn(int x, int y){
+
+    public Spawn(int x, int y) {
         positionTile = new Point(x, y);
         positionPixel = new Point(20 + 40 * x, 20 + 40 * y);
     }
