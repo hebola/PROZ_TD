@@ -1,12 +1,11 @@
-package Entity;
+package Model;
 
 import java.awt.*;
 
 public abstract class Entity {
     protected Point positionPixel;
     protected Point positionTile;
-
-    public abstract void draw(Graphics g);
+    protected EntityType entityType;
 
     public Point getPositionPixel() {
         return positionPixel;
@@ -20,5 +19,7 @@ public abstract class Entity {
         return new Point(positionPixel.x / 40, positionPixel.y / 40);
     }
 
-    public abstract String printData();
+    public EntityType getEntityType() {
+        return entityType;
+    }
 }

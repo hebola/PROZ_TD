@@ -1,4 +1,4 @@
-package pw.proz;
+package Model;
 
 public enum Direction {
     N,

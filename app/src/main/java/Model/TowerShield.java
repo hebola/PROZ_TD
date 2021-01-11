@@ -1,10 +1,11 @@
-package Entity;
+package Model;
 
 import java.awt.*;
 
 public class TowerShield extends Tower {
 
     public TowerShield(float attackPower, int range, int x, int y) {
+        entityType=EntityType.TowerShield;
         this.attackPower = attackPower;
         this.range = range;
         positionTile = new Point(x, y);
@@ -32,13 +33,8 @@ public class TowerShield extends Tower {
         rangeFactor = (float) Math.log10(level * 10);
     }
 
-    public void draw(Graphics g) {
-        g.setColor(Color.blue);
-        g.drawRect(positionPixel.x - 15, positionPixel.y - 15, 30, 30);
-    }
-
     @Override
-    public String printData() {
+    public String toString(){
         return "Shield Tower\nlvl: " + level + "\nupgrade cost: " + level * upgradeCost + "\nattack power: " + attackPower * attackPowerFactor + "\nrange: " + range * rangeFactor;
     }
 

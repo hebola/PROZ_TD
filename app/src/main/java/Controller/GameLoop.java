@@ -1,7 +1,7 @@
-package pw.proz;
+package Controller;
 
-import Entity.*;
-import GUI.Display;
+import Model.*;
+import View.Display;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,6 +18,20 @@ public class GameLoop {
     private Point currentTile = new Point(0, 0);
     private static boolean loseCondition;
 
+    private static Base base = new Base(26, 15);
+    private static Spawn spawn = new Spawn(1, 1);
+    private static Gold gold = new Gold(500);
+
+    public static Gold getGold() {
+        return gold;
+    }
+    public static Base getBase() {
+        return base;
+    }
+    public static Spawn getSpawn() {
+        return spawn;
+    }
+
     private Tile[][] tiles;
     private List<Tower> towers;
 
@@ -29,29 +43,20 @@ public class GameLoop {
         return tiles;
     }
 
-    public static void setLoseCondition(boolean lose) {
-        loseCondition = lose;
-    }
-
     public static boolean getLoseCondition() {
         return loseCondition;
     }
 
     public GameLoop() {
-        tiles = new Tile[App.Columns + 1][App.Rows + 1];
-        for (int i = 0; i < App.Rows + 1; i++)
-            for (int j = 0; j < App.Columns + 1; j++)
+        tiles = new Tile[GameInit.Columns + 1][GameInit.Rows + 1];
+        for (int i = 0; i < GameInit.Rows + 1; i++)
+            for (int j = 0; j < GameInit.Columns + 1; j++)
                 tiles[j][i] = new Tile();
 
         towers = new ArrayList<>();
-        /*towers.add(new TowerArmor(1, 50, 2, 2));
-        tiles[2][2].setContent(towers.get(0));
-        towers.add(new TowerArmor(1, 50, 2, 3));
-        tiles[2][3].setContent(towers.get(1));*/
-
     }
 
-    private static Wave wave = new Wave(0);
+    private static Wave wave = new Wave();
 
     public static Wave getWave() {
         return wave;
@@ -69,7 +74,7 @@ public class GameLoop {
         this.currentTile = currentTile;
     }
 
-    void run(Display display, Base base, Spawn spawn) {
+    void run(Display display) {
 
         double next_game_tick = System.currentTimeMillis();
         int loops;
@@ -78,7 +83,7 @@ public class GameLoop {
         tiles[base.getPositionTile().x][base.getPositionTile().y].setContent(base);
         tiles[spawn.getPositionTile().x][spawn.getPositionTile().y].setContent(spawn);
         try {
-            App.recalculateRoute(App.getBase().getPositionTile());
+            GameInit.recalculateRoute(base.getPositionTile());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,9 +111,7 @@ public class GameLoop {
             }
 
             interpolation = (System.currentTimeMillis() + SKIP_TICKS - next_game_tick / (double) SKIP_TICKS);
-            //System.out.println(interpolation);
             display.repaint();
-            //display.graphic.repaint();
             if (base.isBaseDown())
                 loseCondition = true;
         }
@@ -117,13 +120,10 @@ public class GameLoop {
 
     public void nextWave() {
         if (wave.getNumOfEnemiesAlive() == 0) {
-            App.getMyGold().addGold(100 + 30 * wave.numberOfWaves);
-            wave.numberOfWaves++;
-            wave = new Wave((int) (wave.numberOfWaves * 1.5));
+            gold.addGold(100 + 30 * wave.getNumberOfWaves());
+            wave = new Wave();
             wave.setSpaceTickCounter(0);
             wave.setSpaceCounter(0);
-            System.out.println("created wave");
         }
-        System.out.println("end wave");
     }
 }

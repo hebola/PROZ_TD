@@ -1,6 +1,6 @@
-package Entity;
+package Model;
 
-import pw.proz.App;
+import Controller.GameLoop;
 
 import java.awt.*;
 
@@ -8,6 +8,7 @@ public class TowerSlowdown extends Tower {
 
 
     public TowerSlowdown(float attackPower, int range, int x, int y) {
+        entityType=EntityType.TowerSlowdown;
         this.attackPower = attackPower;
         this.range = range;
         positionTile = new Point(x, y);
@@ -18,24 +19,19 @@ public class TowerSlowdown extends Tower {
     public void attack(Enemy[] enemy) {
         for (int i = 0; i < enemy.length; i++) {
             if (!enemy[i].dead() && (Math.sqrt(Math.pow(enemy[i].getPositionPixel().x - positionPixel.x, 2) + Math.pow(enemy[i].getPositionPixel().y - positionPixel.y, 2)) < range * rangeFactor)) {
-                enemy[i].setMovementSpeedFactor((float) Math.pow(19. / 20, attackPower * attackPowerFactor));
+                enemy[i].setMovementSpeedFactor((float) Math.pow(9. / 10, attackPower * attackPowerFactor));
             }
         }
     }
 
-    public void draw(Graphics g) {
-        g.setColor(Color.cyan);
-        g.drawRect(positionPixel.x - 15, positionPixel.y - 15, 30, 30);
-    }
-
     @Override
-    public String printData() {
+    public String toString(){
         return "Slowdown Tower\nlvl: " + level + "\nupgrade cost: " + level * upgradeCost + "\nslowdown factor: " + (float) Math.pow(19. / 20, attackPower * attackPowerFactor) + "\nrange: " + range * rangeFactor;
     }
 
     @Override
     public void upgrade() {
-        if (App.getMyGold().subtractGold(level * upgradeCost))
+        if (GameLoop.getGold().subtractGold(level * upgradeCost))
             level++;
         attackPowerFactor += 0.5;
         rangeFactor = (float) Math.log10(level * 10);

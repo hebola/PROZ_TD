@@ -1,11 +1,11 @@
-package Entity;
+package Model;
 
 import java.awt.*;
 
 public class TowerArmor extends Tower {
 
-
     public TowerArmor(float attackPower, int range, int x, int y) {
+        entityType = EntityType.TowerArmor;
         this.attackPower = attackPower;
         this.range = range;
         positionTile = new Point(x, y);
@@ -26,13 +26,8 @@ public class TowerArmor extends Tower {
         }
     }
 
-    public void draw(Graphics g) {
-        g.setColor(Color.green);
-        g.drawRect(positionPixel.x - 15, positionPixel.y - 15, 30, 30);
-    }
-
     @Override
-    public String printData() {
+    public String toString() {
         return "Armor Tower\nlvl: " + level + "\nupgrade cost: " + level * upgradeCost + "\nattack power: " + attackPower * attackPowerFactor + "\nrange: " + range * rangeFactor;
     }
 

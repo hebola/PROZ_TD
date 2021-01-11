@@ -1,4 +1,4 @@
-package Entity;
+package Model;
 
 import java.awt.*;
 
@@ -7,6 +7,7 @@ public class TowerPoison extends Tower {
     private int duration = 10;
 
     public TowerPoison(float attackPower, int range, int x, int y) {
+        entityType=EntityType.TowerPoison;
         this.attackPower = attackPower;
         this.range = range;
         positionTile = new Point(x, y);
@@ -24,13 +25,8 @@ public class TowerPoison extends Tower {
         }
     }
 
-    public void draw(Graphics g) {
-        g.setColor(Color.magenta);
-        g.drawRect(positionPixel.x - 15, positionPixel.y - 15, 30, 30);
-    }
-
     @Override
-    public String printData() {
+    public String toString(){
         return "Poison Tower\nlvl: " + level + "\nupgrade cost: " + level * upgradeCost + "\npower: " + attackPower * attackPowerFactor + "\nrange: " + range * rangeFactor + "\nduration: " + duration;
     }
 

@@ -1,6 +1,6 @@
-package pw.proz;
+package Model;
 
-import Entity.*;
+import Model.*;
 
 public class Tile {
     private Entity content;

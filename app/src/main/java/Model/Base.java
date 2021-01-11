@@ -1,15 +1,14 @@
-package Entity;
+package Model;
 
 import java.awt.*;
 
 public class Base extends Entity {
-    private int BASE_X;
-    private int BASE_Y;
+
     private int maxHitPoints;
     private int hitPoints;
 
-
     public Base(int x, int y) {
+        entityType = EntityType.Base;
         maxHitPoints = 100;
         hitPoints = maxHitPoints;
         positionTile = new Point(x, y);
@@ -20,22 +19,20 @@ public class Base extends Entity {
         return (float) (Math.pow(positionPixel.x - pos.x, 2) + Math.pow(positionPixel.y - pos.y, 2));
     }
 
-    public void drawHitPoints(Graphics g) {
-        g.setColor(Color.green);
-        g.drawArc(positionPixel.x - 15, positionPixel.y - 15, 30, 30, 90, -360 * hitPoints / maxHitPoints);
+    public int getMaxHitPoints() {
+        return maxHitPoints;
+    }
+
+    public int getHitPoints() {
+        return hitPoints;
     }
 
     public boolean isBaseDown() {
         return hitPoints <= 0;
     }
 
-
-    public void draw(Graphics g) {
-
-    }
-
     @Override
-    public String printData() {
+    public String toString(){
         return "Base\nhit points: " + hitPoints;
     }
 

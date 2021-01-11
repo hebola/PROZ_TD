@@ -1,8 +1,8 @@
-package GUI;
+package View;
 
-import pw.proz.App;
-import pw.proz.GameLoop;
-import pw.proz.Mouse;
+import Controller.GameInit;
+import Controller.GameLoop;
+import Controller.Mouse;
 
 import java.awt.*;
 import javax.swing.*;
@@ -11,7 +11,6 @@ import javax.swing.*;
 public class Graphic extends JPanel {
 
     private Renderer render;
-
 
     public Graphic() {
         super();
@@ -25,17 +24,14 @@ public class Graphic extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         this.setBackground(Color.BLACK);
-        //System.out.println(this.getBounds());
-        //this.setPreferredSize(new Dimension(1280,720));
-        //this.setSize(new Dimension(1280,720));
 
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.setColor(Color.darkGray);
-        for (int i = 0; i <= App.Columns; i++)
-            g2D.drawLine(40 + 40 * i, 40, 40 + 40 * i, 40 + 40 * App.Rows);
-        for (int i = 0; i <= App.Rows; i++)
-            g2D.drawLine(40, 40 + 40 * i, 40 + 40 * App.Columns, 40 + 40 * i);
+        for (int i = 0; i <= GameInit.Columns; i++)
+            g2D.drawLine(40 + 40 * i, 40, 40 + 40 * i, 40 + 40 * GameInit.Rows);
+        for (int i = 0; i <= GameInit.Rows; i++)
+            g2D.drawLine(40, 40 + 40 * i, 40 + 40 * GameInit.Columns, 40 + 40 * i);
 
         g2D.setColor(Color.red);
         g2D.drawRect(0, 0, 1280 - 1, 720 - 1);
