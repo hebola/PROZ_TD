@@ -10,17 +10,16 @@ public class TowerArmor extends Tower {
         this.range = range;
         positionTile = new Point(x, y);
         positionPixel = new Point(20 + 40 * x, 20 + 40 * y);
-
         upgradeCost = 50;
     }
 
     public void attack(Enemy[] enemy) {
-        for (int i = 0; i < enemy.length; i++) {
-            if (!enemy[i].dead() && (Math.sqrt(Math.pow(enemy[i].getPositionPixel().x - positionPixel.x, 2) + Math.pow(enemy[i].getPositionPixel().y - positionPixel.y, 2)) < range * rangeFactor)) {
-                if (enemy[i].getArmor() > 0)
-                    enemy[i].setArmor(enemy[i].getArmor() - attackPower * attackPowerFactor);
+        for (Enemy value : enemy) {
+            if (!value.dead() && (Math.sqrt(Math.pow(value.getPositionPixel().x - positionPixel.x, 2) + Math.pow(value.getPositionPixel().y - positionPixel.y, 2)) < range * rangeFactor)) {
+                if (value.getArmor() > 0)
+                    value.setArmor(value.getArmor() - attackPower * attackPowerFactor);
                 else
-                    enemy[i].setHitPoints(enemy[i].getHitPoints() - attackPower * attackPowerFactor);
+                    value.setHitPoints(value.getHitPoints() - attackPower * attackPowerFactor);
                 break;
             }
         }

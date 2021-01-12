@@ -6,16 +6,17 @@ import View.Display;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static java.lang.Math.min;
 
 public class GameLoop {
 
-    private double interpolation = 0;
-    private final int TICKS_PER_SECOND = 30;
-    private final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
-    private final int MAX_FRAMESKIP = 5;
-    private Point currentTile = new Point(0, 0);
+    private double interpolation;
+    private final int TICKS_PER_SECOND;
+    private final int SKIP_TICKS;
+    private final int MAX_FRAMESKIP;
+    private Point currentTile;
     private static boolean loseCondition;
 
     private static Base base = new Base(26, 15);
@@ -48,28 +49,27 @@ public class GameLoop {
     }
 
     public GameLoop() {
-        tiles = new Tile[GameInit.Columns + 1][GameInit.Rows + 1];
-        for (int i = 0; i < GameInit.Rows + 1; i++)
-            for (int j = 0; j < GameInit.Columns + 1; j++)
+        interpolation = 0;
+        TICKS_PER_SECOND = 30;
+        SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+        MAX_FRAMESKIP = 5;
+        currentTile = new Point(0, 0);
+
+        tiles = new Tile[GameInit.COLUMNS + 1][GameInit.ROWS + 1];
+        for (int i = 0; i < GameInit.ROWS + 1; i++)
+            for (int j = 0; j < GameInit.COLUMNS + 1; j++)
                 tiles[j][i] = new Tile();
 
         towers = new ArrayList<>();
     }
 
     private static Wave wave = new Wave();
-
-    public static Wave getWave() {
-        return wave;
-    }
-
     public static Enemy[] getEnemies() {
         return wave.getEnemy();
     }
-
     public Point getCurrentTile() {
         return currentTile;
     }
-
     public void setCurrentTile(Point currentTile) {
         this.currentTile = currentTile;
     }
@@ -84,8 +84,8 @@ public class GameLoop {
         tiles[spawn.getPositionTile().x][spawn.getPositionTile().y].setContent(spawn);
         try {
             GameInit.recalculateRoute(base.getPositionTile());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            //will never happen, unless you separate base from spawn, what can't happen before game is started
         }
 
         while (!loseCondition) {
@@ -99,12 +99,10 @@ public class GameLoop {
                     wave.setSpaceCounter(wave.getSpaceCounter() + 1);
                     wave.setSpaceTickCounter(0);
                 }
-                for (int i = 0; i < min(wave.getNumOfEnemies(), wave.getSpaceCounter()); i++)
-                    wave.getEnemy()[i].move(base);
+                IntStream.range(0, min(wave.getNumOfEnemies(), wave.getSpaceCounter())).forEach(i -> wave.getEnemy()[i].move(base));
 
 
-                for (int i = 0; i < towers.size(); i++)
-                    towers.get(i).attack(wave.getEnemy());
+                for (Tower tower : towers) tower.attack(wave.getEnemy());
 
                 next_game_tick += SKIP_TICKS;
                 loops++;
@@ -120,7 +118,7 @@ public class GameLoop {
 
     public void nextWave() {
         if (wave.getNumOfEnemiesAlive() == 0) {
-            gold.addGold(100 + 30 * wave.getNumberOfWaves());
+            gold.addGold(100 + 30 * Wave.getNumberOfWaves());
             wave = new Wave();
             wave.setSpaceTickCounter(0);
             wave.setSpaceCounter(0);

@@ -43,10 +43,6 @@ public class Enemy extends Entity {
         direction = Direction.N;
     }
 
-    public static int getNumOfEnemies() {
-        return numOfEnemies;
-    }
-
     public void move(Base toWhichBase) {
         int[][] route = GameInit.getRoute();
         if ((direction == Direction.E && Math.abs((exactPosition.x + 20) % 40 - (exactPosition.x + movementSpeed * movementSpeedFactor + 20) % 40) > 20) ||

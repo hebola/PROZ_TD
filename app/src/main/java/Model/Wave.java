@@ -1,11 +1,11 @@
 package Model;
 
 import Controller.GameLoop;
-import Model.Enemy;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Wave {
     private int numOfEnemies;
@@ -19,18 +19,17 @@ public class Wave {
 
     static int numberOfWaves = -1;
 
-
     public int getSpaceBetweenEnemies() {
         return spaceBetweenEnemies;
     }
 
     public Wave() {
         numberOfWaves++;
-        numOfEnemies = (int)(numberOfWaves * 1.5);
+        numOfEnemies = (int) (numberOfWaves * 1.5);
         this.spaceBetweenEnemies = 15;
         enemy = new ArrayList<>();
 
-        for (int i = 0; i < numOfEnemies; i++)
+        IntStream.range(0, numOfEnemies).forEach(i -> {
             switch (numberOfWaves % 7) {
                 case 0 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 20 * numberOfWaves, 10, 50));
                 case 1 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 20 * numberOfWaves, 50));
@@ -40,6 +39,7 @@ public class Wave {
                 case 5 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 10, 10 * numberOfWaves, 50 + 20 * numberOfWaves));
                 case 6 -> enemy.add(new Enemy(spawnPoint.x, spawnPoint.y, 20 * numberOfWaves, 20 * numberOfWaves, 50 + 20 * numberOfWaves));
             }
+        });
     }
 
     public int getNumOfEnemiesAlive() {

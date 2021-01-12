@@ -6,7 +6,6 @@ import java.awt.*;
 
 public class TowerSlowdown extends Tower {
 
-
     public TowerSlowdown(float attackPower, int range, int x, int y) {
         entityType=EntityType.TowerSlowdown;
         this.attackPower = attackPower;
@@ -17,9 +16,9 @@ public class TowerSlowdown extends Tower {
     }
 
     public void attack(Enemy[] enemy) {
-        for (int i = 0; i < enemy.length; i++) {
-            if (!enemy[i].dead() && (Math.sqrt(Math.pow(enemy[i].getPositionPixel().x - positionPixel.x, 2) + Math.pow(enemy[i].getPositionPixel().y - positionPixel.y, 2)) < range * rangeFactor)) {
-                enemy[i].setMovementSpeedFactor((float) Math.pow(9. / 10, attackPower * attackPowerFactor));
+        for (Enemy value : enemy) {
+            if (!value.dead() && (Math.sqrt(Math.pow(value.getPositionPixel().x - positionPixel.x, 2) + Math.pow(value.getPositionPixel().y - positionPixel.y, 2)) < range * rangeFactor)) {
+                value.setMovementSpeedFactor((float) Math.pow(9. / 10, attackPower * attackPowerFactor));
             }
         }
     }

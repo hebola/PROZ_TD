@@ -17,10 +17,10 @@ public class TowerPoison extends Tower {
     }
 
     public void attack(Enemy[] enemy) {
-        for (int i = 0; i < enemy.length; i++) {
-            if (!enemy[i].dead() && (Math.sqrt(Math.pow(enemy[i].getPositionPixel().x - positionPixel.x, 2) + Math.pow(enemy[i].getPositionPixel().y - positionPixel.y, 2)) < range * rangeFactor)) {
-                enemy[i].setPoison(attackPower * attackPowerFactor);
-                enemy[i].setEffectDuration(duration);
+        for (Enemy value : enemy) {
+            if (!value.dead() && (Math.sqrt(Math.pow(value.getPositionPixel().x - positionPixel.x, 2) + Math.pow(value.getPositionPixel().y - positionPixel.y, 2)) < range * rangeFactor)) {
+                value.setPoison(attackPower * attackPowerFactor);
+                value.setEffectDuration(duration);
             }
         }
     }

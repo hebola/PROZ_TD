@@ -7,6 +7,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class Mouse implements MouseListener {
+    private final int COLUMNS = GameInit.COLUMNS;
+    private final int ROWS = GameInit.ROWS;
+    private final Point CORNER = new Point(40 + 40 * COLUMNS + 10, 40);
+    private final Rectangle BOARD = new Rectangle(40, 40, 40 * COLUMNS, 40 * ROWS);
+    private final Rectangle ACTION_BOX = new Rectangle(CORNER.x, CORNER.y + 120, 180, 30);
+    private final Rectangle BUYING_BOX = new Rectangle(CORNER.x, CORNER.y + 150, 90, 120);
+    private final Rectangle NEXT_WAVE_BOX = new Rectangle(CORNER.x, CORNER.y + 300, 180, 30);
+    private GameLoop gameLoop;
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -20,18 +28,12 @@ public class Mouse implements MouseListener {
     public void mouseReleased(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        int Columns = GameInit.Columns;
-        int Rows = GameInit.Rows;
-        GameLoop gameLoop = GameInit.getGameLoop();
 
-        Point corner = new Point(40 + 40 * Columns + 10, 40);
-        Rectangle board = new Rectangle(40, 40, 40 * Columns, 40 * Rows);
-        Rectangle actionBox = new Rectangle(corner.x, corner.y + 120, 180, 30);
-        Rectangle buyingBox = new Rectangle(corner.x, corner.y + 150, 90, 120);
-        Rectangle nextWaveBox = new Rectangle(corner.x, corner.y + 300, 180, 30);
-        Point tile = new Point(0, 0);
+        gameLoop = GameInit.getGameLoop();
 
-        if (board.contains(mouseX, mouseY)) {
+        Point tile;
+
+        if (BOARD.contains(mouseX, mouseY)) {
             tile = new Point((mouseX) / 40, (mouseY) / 40);
             if (gameLoop.getCurrentTile().equals(tile))
                 gameLoop.setCurrentTile(new Point(0, 0));
@@ -40,35 +42,35 @@ public class Mouse implements MouseListener {
 
         } else if (!gameLoop.getCurrentTile().equals(new Point(0, 0))) {
             tile = gameLoop.getCurrentTile();
-            if (actionBox.contains(mouseX, mouseY)) {
+            if (ACTION_BOX.contains(mouseX, mouseY)) {
                 if (gameLoop.getTiles()[tile.x][tile.y].getContent() != null)
-                    if (    gameLoop.getTiles()[tile.x][tile.y].getContent().getEntityType() != EntityType.Base &&
+                    if (gameLoop.getTiles()[tile.x][tile.y].getContent().getEntityType() != EntityType.Base &&
                             gameLoop.getTiles()[tile.x][tile.y].getContent().getEntityType() != EntityType.Spawn)
-                        if (mouseX < corner.x + 90) /* upgrade tower */ {
+                        if (mouseX < CORNER.x + 90) /* upgrade tower */ {
                             Tower tower;
                             tower = (Tower) gameLoop.getTiles()[tile.x][tile.y].getContent();
                             if (GameLoop.getGold().subtractGold(tower.getUpgradeCost() * tower.getLevel()))
                                 tower.upgrade();
                         } else {
                             Tower tower = (Tower) gameLoop.getTiles()[tile.x][tile.y].getContent();
-                            GameLoop.getGold().addGold(((tower.getLevel() - 1) * tower.getUpgradeCost()) / 2 + tower.cost);
+                            GameLoop.getGold().addGold(((tower.getLevel() - 1) * tower.getUpgradeCost()) / 2 + Tower.getCost());
                             gameLoop.getTowers().remove(gameLoop.getTiles()[tile.x][tile.y].getContent());
                             gameLoop.getTiles()[tile.x][tile.y].setContent(null);
                         }
-            } else if (buyingBox.contains(mouseX, mouseY)) {
+            } else if (BUYING_BOX.contains(mouseX, mouseY)) {
                 if (gameLoop.getTiles()[tile.x][tile.y].getContent() == null) {
                     try {
-                        if (mouseY < corner.y + 150 + 30) {
-                            if (GameLoop.getGold().subtractGold(TowerArmor.cost))
+                        if (mouseY < CORNER.y + 150 + 30) {
+                            if (GameLoop.getGold().subtractGold(TowerArmor.getCost()))
                                 gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerArmor(1, 50, tile.x, tile.y));
-                        } else if (mouseY < corner.y + 150 + 60) {
-                            if (GameLoop.getGold().subtractGold(TowerShield.cost))
+                        } else if (mouseY < CORNER.y + 150 + 60) {
+                            if (GameLoop.getGold().subtractGold(TowerShield.getCost()))
                                 gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerShield(1, 50, tile.x, tile.y));
-                        } else if (mouseY < corner.y + 150 + 90) {
-                            if (GameLoop.getGold().subtractGold(TowerPoison.cost))
+                        } else if (mouseY < CORNER.y + 150 + 90) {
+                            if (GameLoop.getGold().subtractGold(TowerPoison.getCost()))
                                 gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerPoison(1, 50, tile.x, tile.y));
                         } else {
-                            if (GameLoop.getGold().subtractGold(TowerSlowdown.cost))
+                            if (GameLoop.getGold().subtractGold(TowerSlowdown.getCost()))
                                 gameLoop.getTiles()[tile.x][tile.y].setContent(new TowerSlowdown(1, 50, tile.x, tile.y));
                         }
 
@@ -76,16 +78,17 @@ public class Mouse implements MouseListener {
                             gameLoop.getTowers().add((Tower) gameLoop.getTiles()[tile.x][tile.y].getContent());
 
                         GameInit.recalculateRoute(GameLoop.getBase().getPositionTile());
-                    } catch (Exception ex) {
+                    } catch (IllegalStateException ex) {
                         gameLoop.getTowers().remove(gameLoop.getTiles()[tile.x][tile.y].getContent());
                         gameLoop.getTiles()[tile.x][tile.y].setContent(null);
+                        GameLoop.getGold().addGold(100);
                     }
                 }
-            } else if (nextWaveBox.contains(mouseX, mouseY)) ;
-            else gameLoop.setCurrentTile(new Point(0, 0));
+            } else if (!NEXT_WAVE_BOX.contains(mouseX, mouseY))
+                gameLoop.setCurrentTile(new Point(0, 0));
         }
 
-        if (nextWaveBox.contains(mouseX, mouseY)) {
+        if (NEXT_WAVE_BOX.contains(mouseX, mouseY)) {
             gameLoop.nextWave();
         }
     }

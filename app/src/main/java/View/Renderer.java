@@ -17,7 +17,7 @@ public class Renderer {
     private Tile[][] tiles;
     private Enemy[] enemies;
 
-    public Renderer(){
+    public Renderer() {
         base = GameLoop.getBase();
         spawn = GameLoop.getSpawn();
         towers = GameInit.getGameLoop().getTowers();
@@ -25,18 +25,18 @@ public class Renderer {
     }
 
     public void renderEnemy(Graphics g) {
-        enemies = GameInit.getGameLoop().getEnemies();
-        for (int i = 0; i < enemies.length; i++)
-            if (!enemies[i].dead()) {
+        enemies = GameLoop.getEnemies();
+        for (Enemy enemy : enemies)
+            if (!enemy.dead()) {
                 g.setColor(Color.pink);
-                g.fillOval(enemies[i].getPositionPixel().x - Enemy.SIZE / 2, enemies[i].getPositionPixel().y - Enemy.SIZE / 2, Enemy.SIZE, Enemy.SIZE);
+                g.fillOval(enemy.getPositionPixel().x - Enemy.SIZE / 2, enemy.getPositionPixel().y - Enemy.SIZE / 2, Enemy.SIZE, Enemy.SIZE);
 
                 g.setColor(Color.green);
-                g.fillRect(enemies[i].getPositionPixel().x - Enemy.SIZE / 2, enemies[i].getPositionPixel().y + 4, (int) (Enemy.SIZE * Math.max(enemies[i].getHitPoints(), 0) / enemies[i].getMaxHitPoints()), 2);
+                g.fillRect(enemy.getPositionPixel().x - Enemy.SIZE / 2, enemy.getPositionPixel().y + 4, (int) (Enemy.SIZE * Math.max(enemy.getHitPoints(), 0) / enemy.getMaxHitPoints()), 2);
                 g.setColor(Color.red);
-                g.fillRect(enemies[i].getPositionPixel().x - Enemy.SIZE / 2, enemies[i].getPositionPixel().y + 7, (int) (Enemy.SIZE * Math.max(enemies[i].getArmor(), 0) / enemies[i].getMaxArmor()), 2);
+                g.fillRect(enemy.getPositionPixel().x - Enemy.SIZE / 2, enemy.getPositionPixel().y + 7, (int) (Enemy.SIZE * Math.max(enemy.getArmor(), 0) / enemy.getMaxArmor()), 2);
                 g.setColor(Color.blue);
-                g.fillRect(enemies[i].getPositionPixel().x - Enemy.SIZE / 2, enemies[i].getPositionPixel().y + 10, (int) (Enemy.SIZE * Math.max(enemies[i].getShield(), 0) / enemies[i].getMaxShield()), 2);
+                g.fillRect(enemy.getPositionPixel().x - Enemy.SIZE / 2, enemy.getPositionPixel().y + 10, (int) (Enemy.SIZE * Math.max(enemy.getShield(), 0) / enemy.getMaxShield()), 2);
             }
     }
 
@@ -46,21 +46,21 @@ public class Renderer {
     }
 
     public void renderTower(Graphics g) {
-        for (int i = 0; i < towers.size(); i++) {
-            switch (towers.get(i).getEntityType()) {
+        for (Tower tower : towers) {
+            switch (tower.getEntityType()) {
                 case TowerArmor -> g.setColor(Color.green);
                 case TowerShield -> g.setColor(Color.blue);
                 case TowerPoison -> g.setColor(Color.magenta);
                 case TowerSlowdown -> g.setColor(Color.cyan);
             }
-            g.drawRect(towers.get(i).getPositionPixel().x - 15, towers.get(i).getPositionPixel().y - 15, 30, 30);
+            g.drawRect(tower.getPositionPixel().x - 15, tower.getPositionPixel().y - 15, 30, 30);
         }
     }
 
     public void renderTileOverview(Graphics g) {
         GameLoop gameLoop = GameInit.getGameLoop();
         Point currentTile = gameLoop.getCurrentTile();
-        Point corner = new Point(40 + 40 * GameInit.Columns + 10, 40);
+        Point corner = new Point(40 + 40 * GameInit.COLUMNS + 10, 40);
 
         g.setColor(Color.red);
 
@@ -81,7 +81,13 @@ public class Renderer {
                         tiles[currentTile.x][currentTile.y].getContent().getEntityType() != EntityType.Spawn) {
                 g.drawString("upgrade", corner.x + 23, corner.y + 120 + 20);
                 g.drawString("sell", corner.x + 36 + 90, corner.y + 120 + 20);
-                ((Tower) tiles[currentTile.x][currentTile.y].getContent()).drawRange(g);
+
+                Tower tower = (Tower) tiles[currentTile.x][currentTile.y].getContent();
+                g.drawOval( (int) (tower.getPositionPixel().x - tower.getRange() * tower.getRangeFactor()),
+                            (int) (tower.getPositionPixel().y - tower.getRange() * tower.getRangeFactor()),
+                            (int) (tower.getRange() * tower.getRangeFactor() * 2),
+                            (int) (tower.getRange() * tower.getRangeFactor() * 2));
+
                 g.drawRect(corner.x, corner.y + 120, 90, 30);
                 g.drawRect(corner.x + 90, corner.y + 120, 90, 30);
             }
@@ -91,8 +97,7 @@ public class Renderer {
         g.drawString("next wave", corner.x + 64, corner.y + 300 + 20);
 
         g.setColor(Color.gray);
-        g.drawRect(40 + 40 * GameInit.Columns + 10, 40, 180, 40 * GameInit.Rows);
-        g.getFont().getSize();
+        g.drawRect(40 + 40 * GameInit.COLUMNS + 10, 40, 180, 40 * GameInit.ROWS);
         g.drawString("X: " + currentTile.x, corner.x + 5, corner.y + g.getFont().getSize() + 2);
         g.drawString("Y: " + currentTile.y, corner.x + 40, corner.y + g.getFont().getSize() + 2);
 
@@ -101,7 +106,7 @@ public class Renderer {
             for (String line : tiles[currentTile.x][currentTile.y].getContent().toString().split("\n"))
                 g.drawString(line, corner.x + 5, y += g.getFontMetrics().getHeight());
 
-        g.drawString("wave: " + gameLoop.getWave().getNumberOfWaves(), corner.x + 5, corner.y + 320 + 30);
+        g.drawString("wave: " + Wave.getNumberOfWaves(), corner.x + 5, corner.y + 320 + 30);
         g.drawString("gold: " + GameLoop.getGold().getAmount(), corner.x + 5, corner.y + 320 + 50);
     }
 

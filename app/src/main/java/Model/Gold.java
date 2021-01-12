@@ -6,11 +6,9 @@ public class Gold {
     public Gold(int amount) {
         this.amount = amount;
     }
-
     public void addGold(int amount) {
         this.amount += amount;
     }
-
     public boolean subtractGold(int amount) {
         if (amount > this.amount)
             return false;
@@ -18,7 +16,6 @@ public class Gold {
         this.amount -= amount;
         return true;
     }
-
     public int getAmount() {
         return amount;
     }
