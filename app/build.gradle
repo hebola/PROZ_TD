@@ -23,5 +23,11 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'pw.proz.App'
+    mainClass = 'Controller.GameInit'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Controller.GameInit'
+    }
 }
